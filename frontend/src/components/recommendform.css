@@ -1,0 +1,265 @@
+/* ══ FORM SECTION ════════════════════════════ */
+.rf {
+    display: flex;
+    flex-direction: column;
+    gap: 36px
+}
+
+/* Card */
+.rf__card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 36px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: .28s var(--ease);
+    animation: fadeUp .5s ease both;
+}
+
+.rf__card:hover {
+    border-color: var(--border-hi);
+    box-shadow: 0 0 50px rgba(124, 58, 237, .1);
+}
+
+/* Header */
+.rf__hdr {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px
+}
+
+.rf__icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 58, 237, .12);
+    border: 1px solid rgba(124, 58, 237, .3);
+    border-radius: var(--r-sm);
+    color: var(--violet-bright);
+}
+
+.rf__title {
+    font-family: var(--f-head);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+}
+
+.rf__sub {
+    font-size: .85rem;
+    color: var(--muted)
+}
+
+/* Form */
+.rf__form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px
+}
+
+.rf__label-row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px
+}
+
+.rf__label {
+    font-family: var(--f-head);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--grey);
+}
+
+.rf__wrap {
+    position: relative;
+    display: flex;
+    align-items: center
+}
+
+.rf__ico {
+    position: absolute;
+    left: 15px;
+    color: var(--muted);
+    pointer-events: none;
+    display: flex;
+}
+
+.rf__input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-md);
+    color: var(--white);
+    font-size: 1rem;
+    transition: .25s var(--ease);
+}
+
+.rf__input::placeholder {
+    color: var(--muted)
+}
+
+.rf__input:focus {
+    border-color: var(--violet);
+    background: rgba(124, 58, 237, .07);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, .18);
+}
+
+.rf__input:disabled {
+    opacity: .5;
+    cursor: not-allowed
+}
+
+.rf__input::-webkit-inner-spin-button,
+.rf__input::-webkit-outer-spin-button {
+    -webkit-appearance: none
+}
+
+.rf__input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield
+}
+
+/* Button */
+.rf__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border-radius: var(--r-md);
+    font-family: var(--f-head);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--g-btn);
+    background-size: 200% 100%;
+    box-shadow: 0 6px 30px rgba(124, 58, 237, .45);
+    transition: .25s var(--ease);
+    animation: borderPulse 3s ease-in-out infinite;
+}
+
+.rf__btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 42px rgba(124, 58, 237, .65);
+    animation: none;
+}
+
+.rf__btn:active:not(:disabled) {
+    transform: translateY(0)
+}
+
+.rf__btn:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    animation: none
+}
+
+.rf__btn--loading {
+    animation: none
+}
+
+/* Spinner */
+.rf__spin {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border: 2.5px solid rgba(255, 255, 255, .25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+/* Error */
+.rf__err {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: rgba(239, 68, 68, .1);
+    border: 1px solid rgba(239, 68, 68, .3);
+    border-radius: var(--r-sm);
+    color: #fca5a5;
+    font-size: .87rem;
+    line-height: 1.55;
+    animation: fadeUp .3s ease both;
+}
+
+.rf__err svg {
+    flex-shrink: 0;
+    margin-top: 1px
+}
+
+/* Results */
+.rf__results {
+    animation: fadeUp .4s ease both
+}
+
+.rf__results-hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rf__results-title {
+    font-family: var(--f-head);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.rf__results-uid {
+    background: var(--g-text);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradShift 4s ease infinite;
+}
+
+.rf__reset {
+    padding: 8px 20px;
+    border: 1.5px solid var(--border-hi);
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--grey);
+    font-family: var(--f-head);
+    font-size: .82rem;
+    font-weight: 700;
+    transition: .22s var(--ease);
+}
+
+.rf__reset:hover {
+    background: rgba(124, 58, 237, .1);
+    color: var(--white);
+    border-color: var(--violet);
+}
+
+/* Grid */
+.rf__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 14px;
+}
+
+@media(max-width:520px) {
+    .rf__card {
+        padding: 22px 18px
+    }
+
+    .rf__grid {
+        grid-template-columns: repeat(2, 1fr)
+    }
+}

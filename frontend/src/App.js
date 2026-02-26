@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import HeroSection from "./components/HeroSection";
+import RecommendForm from "./components/RecommendForm";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div className="app">
+      {/* Ambient glow orbs */}
+      <div className="orb orb-1" />
+      <div className="orb orb-2" />
+      <div className="orb orb-3" />
+
+      <Navbar />
+
+      <main className="main">
+        <HeroSection />
+        <div className="divider" />
+        <section className="form-section">
+          <div className="section-eyebrow">
+            <div className="eyebrow-bar" />
+            <span className="eyebrow-text">Personalized For You</span>
+            <div className="eyebrow-bar" />
+          </div>
+          <RecommendForm />
+        </section>
+      </main>
+
+      <footer className="footer">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Built with ❤️ by <span className="footer-brand">RecoAI</span>
+          &nbsp;— powered by ML &amp; collaborative filtering
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </footer>
     </div>
   );
 }

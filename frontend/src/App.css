@@ -1,38 +1,122 @@
-.App {
+/* ══ APP WRAPPER ══════════════════════════════ */
+.app {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg);
+  overflow: hidden;
+  padding-top: 100px;
+  /* 30px ticker + 70px nav */
+}
+
+/* ══ AMBIENT ORBS ═════════════════════════════ */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 16s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124, 58, 237, .18) 0%, transparent 70%);
+  top: -200px;
+  left: -150px;
+}
+
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(34, 211, 238, .12) 0%, transparent 70%);
+  bottom: -100px;
+  right: -120px;
+  animation-delay: -6s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(244, 114, 182, .09) 0%, transparent 70%);
+  top: 45%;
+  left: 55%;
+  animation-delay: -11s;
+}
+
+/* ══ MAIN CONTENT ═════════════════════════════ */
+.main {
+  position: relative;
+  z-index: 1
+}
+
+/* ══ DIVIDER ══════════════════════════════════ */
+.divider {
+  height: 1px;
+  max-width: 860px;
+  margin: 0 auto 60px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, .5), rgba(34, 211, 238, .4), transparent);
+}
+
+/* ══ FORM SECTION ═════════════════════════════ */
+.form-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+}
+
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.eyebrow-bar {
+  flex: 1;
+  max-width: 100px;
+  height: 1px;
+}
+
+.eyebrow-bar:first-child {
+  background: linear-gradient(90deg, transparent, var(--violet))
+}
+
+.eyebrow-bar:last-child {
+  background: linear-gradient(90deg, var(--cyan), transparent)
+}
+
+.eyebrow-text {
+  font-family: var(--f-head);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ══ FOOTER ═══════════════════════════════════ */
+.footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.footer p {
+  font-size: .82rem;
+  color: var(--muted)
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer-brand {
+  font-family: var(--f-head);
+  font-weight: 800;
+  background: var(--g-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradShift 4s ease infinite;
 }
