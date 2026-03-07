@@ -1,2 +1,6 @@
 flask
 flask-cors
+flask-caching
+pandas
+numpy
+pytest

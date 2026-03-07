@@ -4,8 +4,8 @@
   min-height: 100vh;
   background: var(--bg);
   overflow: hidden;
-  padding-top: 100px;
-  /* 30px ticker + 70px nav */
+  padding-top: 70px;
+  /* 70px nav */
 }
 
 /* ══ AMBIENT ORBS ═════════════════════════════ */

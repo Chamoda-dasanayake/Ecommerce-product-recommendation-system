@@ -1,32 +1,39 @@
 import React from "react";
 import "./productcard.css";
 
-const EMOJIS = ["🎧", "📱", "💻", "👟", "⌚", "🎮", "📷", "🛋️", "👕", "📚", "🎨", "🏋️"];
-const CATS = ["Electronics", "Mobile", "Computers", "Footwear", "Wearables",
-    "Gaming", "Cameras", "Home", "Apparel", "Books", "Design", "Fitness"];
+export default function ProductCard({ product, style }) {
+    const { rank, name, brand, category, emoji, price, rating, match_score } = product;
 
-function info(id) {
-    const i = parseInt(id) % EMOJIS.length;
-    return { emoji: EMOJIS[i], cat: CATS[i] };
-}
-
-export default function ProductCard({ productId, rank, style }) {
-    const { emoji, cat } = info(productId);
-    const score = Math.max(60, 100 - rank * 4 + Math.floor(Math.random() * 5));
+    // Build star string
+    const fullStars = Math.floor(rating);
+    const half = rating - fullStars >= 0.5 ? "½" : "";
+    const stars = "★".repeat(fullStars) + half;
 
     return (
         <div className="pcard" style={style}>
             <span className="pcard__rank">#{rank}</span>
+
             <div className="pcard__emoji">{emoji}</div>
-            <div>
-                <p className="pcard__name">Product {productId}</p>
-                <p className="pcard__cat">{cat}</p>
-            </div>
-            <div>
-                <div className="pcard__score-bar">
-                    <div className="pcard__score-fill" style={{ width: `${score}%` }} />
+
+            <div className="pcard__info">
+                <p className="pcard__name">{name}</p>
+                <p className="pcard__brand">{brand} &middot; {category}</p>
+                <div className="pcard__meta">
+                    <span className="pcard__price">${price}</span>
+                    <span className="pcard__rating" title={`${rating} / 5`}>
+                        {stars} <span className="pcard__rating-num">{rating}</span>
+                    </span>
                 </div>
-                <p className="pcard__score-label">{score}% match</p>
+            </div>
+
+            <div className="pcard__score-wrap">
+                <div className="pcard__score-bar">
+                    <div
+                        className="pcard__score-fill"
+                        style={{ width: `${match_score}%` }}
+                    />
+                </div>
+                <p className="pcard__score-label">{match_score}% match</p>
             </div>
         </div>
     );

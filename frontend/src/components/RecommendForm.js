@@ -1,22 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProductCard from "./ProductCard";
 import "./recommendform.css";
 
+const API = "http://localhost:5000";
+
 export default function RecommendForm() {
     const [userId, setUserId] = useState("");
+    const [userList, setUserList] = useState([]);
     const [recs, setRecs] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
+    const [usersLoading, setUsersLoading] = useState(true);
 
+    // ── Fetch valid user IDs from backend on mount ───────────────────────────
+    useEffect(() => {
+        axios.get(`${API}/users`)
+            .then(res => {
+                setUserList(res.data.users || []);
+                if (res.data.users && res.data.users.length > 0) {
+                    setUserId(res.data.users[0]); // pre-select first user
+                }
+            })
+            .catch(() => {
+                setError("Cannot connect to backend. Make sure the server is running on port 5000.");
+            })
+            .finally(() => setUsersLoading(false));
+    }, []);
+
+    // ── Submit ───────────────────────────────────────────────────────────────
     const submit = async (e) => {
         e.preventDefault();
         setRecs([]); setError(""); setLoading(true); setDone(false);
         try {
-            const res = await axios.post("http://localhost:5000/recommend", {
-                user_id: parseInt(userId),
-            });
+            const res = await axios.post(`${API}/recommend`, { user_id: userId });
             setRecs(res.data.recommendations);
             setDone(true);
         } catch (err) {
@@ -30,7 +48,7 @@ export default function RecommendForm() {
         }
     };
 
-    const reset = () => { setUserId(""); setRecs([]); setError(""); setDone(false); };
+    const reset = () => { setUserId(userList[0] || ""); setRecs([]); setError(""); setDone(false); };
 
     return (
         <div className="rf">
@@ -43,8 +61,8 @@ export default function RecommendForm() {
                         </svg>
                     </div>
                     <div>
-                        <h2 className="rf__title">Get Recommendations</h2>
-                        <p className="rf__sub">Enter a User ID to discover personalized products</p>
+                        <h2 className="rf__title">Discover Products</h2>
+                        <p className="rf__sub">Select a User ID to discover personalized products</p>
                     </div>
                 </div>
 
@@ -58,21 +76,30 @@ export default function RecommendForm() {
                                     <circle cx="12" cy="7" r="4" />
                                 </svg>
                             </span>
-                            <input
-                                id="uid"
-                                className="rf__input"
-                                type="number"
-                                placeholder="e.g. 1, 2, 3 …"
-                                value={userId}
-                                onChange={e => setUserId(e.target.value)}
-                                min="1"
-                                required
-                                disabled={loading}
-                            />
+
+                            {usersLoading ? (
+                                <div className="rf__input" style={{ display: "flex", alignItems: "center", color: "var(--rf-muted, #888)" }}>
+                                    <span className="rf__spin" style={{ marginRight: 8 }} />
+                                    Loading users…
+                                </div>
+                            ) : (
+                                <select
+                                    id="uid"
+                                    className="rf__input"
+                                    value={userId}
+                                    onChange={e => setUserId(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                >
+                                    {userList.map(uid => (
+                                        <option key={uid} value={uid}>{uid}</option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
                     </div>
 
-                    <button className={`rf__btn${loading ? " rf__btn--loading" : ""}`} type="submit" disabled={loading}>
+                    <button className={`rf__btn${loading ? " rf__btn--loading" : ""}`} type="submit" disabled={loading || usersLoading}>
                         {loading ? (
                             <><span className="rf__spin" />Analyzing…</>
                         ) : (
@@ -80,7 +107,7 @@ export default function RecommendForm() {
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                                     <polygon points="5 3 19 12 5 21 5 3" />
                                 </svg>
-                                Get Recommendations
+                                Discover
                             </>
                         )}
                     </button>
@@ -109,11 +136,10 @@ export default function RecommendForm() {
                         <button className="rf__reset" onClick={reset}>New Search</button>
                     </div>
                     <div className="rf__grid">
-                        {recs.map((pid, i) => (
+                        {recs.map((product, i) => (
                             <ProductCard
-                                key={i}
-                                productId={pid}
-                                rank={i + 1}
+                                key={product.asin}
+                                product={product}
                                 style={{ animationDelay: `${i * 0.07}s` }}
                             />
                         ))}

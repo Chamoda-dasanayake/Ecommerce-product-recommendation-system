@@ -3,6 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import RecommendForm from "./components/RecommendForm";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
       <main className="main">
         <HeroSection />
         <div className="divider" />
-        <section className="form-section">
+        <section className="form-section" id="recommend">
           <div className="section-eyebrow">
             <div className="eyebrow-bar" />
             <span className="eyebrow-text">Personalized For You</span>
@@ -27,12 +28,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="footer">
-        <p>
-          Built with ❤️ by <span className="footer-brand">RecoAI</span>
-          &nbsp;— powered by ML &amp; collaborative filtering
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }
