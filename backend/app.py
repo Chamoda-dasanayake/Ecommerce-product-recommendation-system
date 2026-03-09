@@ -35,15 +35,55 @@ def _get_hybrid():
     return _h
 
 
+def _get_semantic():
+    import semantic_model as _s
+    return _s
+
+
 @app.route("/health", methods=["GET"])
 def health():
     m   = _get_model()
     cbf = _get_cbf()
     return jsonify({
-        "status":       "ok",
-        "model_loaded": m.is_model_loaded(),
-        "cbf_loaded":   cbf.is_cbf_loaded(),
+        "status":          "ok",
+        "model_loaded":    m.is_model_loaded(),
+        "cbf_loaded":      cbf.is_cbf_loaded(),
     }), 200
+
+
+@app.route("/search/semantic", methods=["POST"])
+def search_semantic():
+    t_start = time.perf_counter()
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be JSON.", "code": "missing_body"}), 400
+
+    query = data.get("query", "")
+    if not isinstance(query, str) or not query.strip():
+        return jsonify({"error": "query must be a non-empty string.", "code": "invalid_query"}), 400
+
+    query = query.strip()
+
+    cache_key = f"sem:{query.lower()}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        logger.info("Cache HIT (semantic) for query='%s'", query)
+        return jsonify(cached), 200
+
+    sem  = _get_semantic()
+    recs = sem.semantic_search(query)
+
+    response_data = {
+        "results": recs,
+        "query":   query,
+        "count":   len(recs),
+    }
+    cache.set(cache_key, response_data)
+
+    elapsed = time.perf_counter() - t_start
+    logger.info("Semantic search query='%s'  count=%d  time=%.2fs", query, len(recs), elapsed)
+    return jsonify(response_data), 200
 
 
 @app.route("/recommend/hybrid", methods=["POST"])

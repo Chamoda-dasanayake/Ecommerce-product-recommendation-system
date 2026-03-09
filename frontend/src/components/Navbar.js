@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.css";
 
-export default function Navbar() {
+export default function Navbar({ onSearch }) {
     const [solid, setSolid] = useState(false);
+    const [query, setQuery] = useState("");
 
     useEffect(() => {
         const fn = () => setSolid(window.scrollY > 10);
@@ -10,11 +11,15 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", fn);
     }, []);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (query.trim()) onSearch(query.trim());
+    };
+
     return (
         <header className={`navbar ${solid ? "navbar--solid" : ""}`}>
             <div className="navbar__inner">
 
-                {/* Logo */}
                 <a href="/" className="navbar__logo">
                     <span className="navbar__logo-icon">🛒</span>
                     <span className="navbar__logo-text">
@@ -22,16 +27,20 @@ export default function Navbar() {
                     </span>
                 </a>
 
-                {/* Search */}
-                <div className="navbar__search">
+                <form className="navbar__search" onSubmit={handleSubmit}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                         <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
                     </svg>
-                    <input type="text" className="navbar__search-input" placeholder="Search products…" />
-                    <button className="navbar__search-btn">Search</button>
-                </div>
+                    <input
+                        type="text"
+                        className="navbar__search-input"
+                        placeholder="Search products… e.g. wireless gaming headphones"
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                    />
+                    <button className="navbar__search-btn" type="submit">Search</button>
+                </form>
 
-                {/* Actions */}
                 <div className="navbar__actions">
                     <a href="#recommend" className="navbar__action">Deals</a>
                     <a href="#recommend" className="navbar__action">Sign In</a>
@@ -46,7 +55,6 @@ export default function Navbar() {
 
             </div>
 
-            {/* Category strip */}
             <div className="navbar__cats">
                 <div className="navbar__cats-inner">
                     {["All", "Electronics", "Phones", "Computers", "Audio", "Cameras", "Gaming", "Wearables", "Smart Home"].map(cat => (
