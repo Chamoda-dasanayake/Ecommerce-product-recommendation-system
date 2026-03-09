@@ -5,43 +5,6 @@
   background: var(--bg);
   overflow: hidden;
   padding-top: 70px;
-  /* 70px nav */
-}
-
-/* ══ AMBIENT ORBS ═════════════════════════════ */
-.orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: 0;
-  animation: orbFloat 16s ease-in-out infinite;
-}
-
-.orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(124, 58, 237, .18) 0%, transparent 70%);
-  top: -200px;
-  left: -150px;
-}
-
-.orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(34, 211, 238, .12) 0%, transparent 70%);
-  bottom: -100px;
-  right: -120px;
-  animation-delay: -6s;
-}
-
-.orb-3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(244, 114, 182, .09) 0%, transparent 70%);
-  top: 45%;
-  left: 55%;
-  animation-delay: -11s;
 }
 
 /* ══ MAIN CONTENT ═════════════════════════════ */
@@ -55,7 +18,7 @@
   height: 1px;
   max-width: 860px;
   margin: 0 auto 60px;
-  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, .5), rgba(34, 211, 238, .4), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
 }
 
 /* ══ FORM SECTION ═════════════════════════════ */
@@ -80,18 +43,18 @@
 }
 
 .eyebrow-bar:first-child {
-  background: linear-gradient(90deg, transparent, var(--violet))
+  background: linear-gradient(90deg, transparent, var(--red))
 }
 
 .eyebrow-bar:last-child {
-  background: linear-gradient(90deg, var(--cyan), transparent)
+  background: linear-gradient(90deg, var(--muted), transparent)
 }
 
 .eyebrow-text {
   font-family: var(--f-head);
-  font-size: .68rem;
-  font-weight: 700;
-  letter-spacing: .18em;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -112,11 +75,6 @@
 
 .footer-brand {
   font-family: var(--f-head);
-  font-weight: 800;
-  background: var(--g-text);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradShift 4s ease infinite;
+  font-weight: 700;
+  color: var(--red);
 }

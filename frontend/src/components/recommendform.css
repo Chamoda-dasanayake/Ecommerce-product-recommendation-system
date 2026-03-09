@@ -10,16 +10,15 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    padding: 36px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    padding: 40px;
     transition: .28s var(--ease);
     animation: fadeUp .5s ease both;
+    box-shadow: 0 2px 20px rgba(26, 20, 16, .05);
 }
 
 .rf__card:hover {
     border-color: var(--border-hi);
-    box-shadow: 0 0 50px rgba(124, 58, 237, .1);
+    box-shadow: 0 6px 40px rgba(26, 20, 16, .09);
 }
 
 /* Header */
@@ -37,17 +36,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(124, 58, 237, .12);
-    border: 1px solid rgba(124, 58, 237, .3);
+    background: var(--red-light);
+    border: 1px solid rgba(155, 28, 28, .2);
     border-radius: var(--r-sm);
-    color: var(--violet-bright);
+    color: var(--red);
 }
 
 .rf__title {
     font-family: var(--f-head);
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--white);
+    color: var(--ink);
     margin-bottom: 2px;
 }
 
@@ -70,9 +69,9 @@
 }
 
 .rf__label {
-    font-family: var(--f-head);
-    font-size: .72rem;
-    font-weight: 700;
+    font-family: var(--f-body);
+    font-size: .7rem;
+    font-weight: 600;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--grey);
@@ -94,12 +93,12 @@
 
 .rf__input {
     width: 100%;
-    padding: 14px 16px 14px 46px;
+    padding: 13px 16px 13px 46px;
     background: var(--bg-input);
     border: 1.5px solid var(--border);
     border-radius: var(--r-md);
-    color: var(--white);
-    font-size: 1rem;
+    color: var(--ink);
+    font-size: .95rem;
     transition: .25s var(--ease);
 }
 
@@ -108,9 +107,10 @@
 }
 
 .rf__input:focus {
-    border-color: var(--violet);
-    background: rgba(124, 58, 237, .07);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, .18);
+    border-color: var(--red);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(155, 28, 28, .1);
+    outline: none;
 }
 
 .rf__input:disabled {
@@ -134,23 +134,23 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 15px;
+    padding: 14px;
     border-radius: var(--r-md);
-    font-family: var(--f-head);
-    font-size: 1rem;
-    font-weight: 700;
+    font-family: var(--f-body);
+    font-size: .9rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
     color: #fff;
-    background: var(--g-btn);
-    background-size: 200% 100%;
-    box-shadow: 0 6px 30px rgba(124, 58, 237, .45);
+    background: var(--red);
     transition: .25s var(--ease);
-    animation: borderPulse 3s ease-in-out infinite;
+    box-shadow: 0 4px 20px rgba(155, 28, 28, .25);
 }
 
 .rf__btn:hover:not(:disabled) {
+    background: var(--red-mid);
     transform: translateY(-2px);
-    box-shadow: 0 10px 42px rgba(124, 58, 237, .65);
-    animation: none;
+    box-shadow: 0 8px 32px rgba(155, 28, 28, .35);
 }
 
 .rf__btn:active:not(:disabled) {
@@ -158,13 +158,8 @@
 }
 
 .rf__btn:disabled {
-    opacity: .65;
-    cursor: not-allowed;
-    animation: none
-}
-
-.rf__btn--loading {
-    animation: none
+    opacity: .55;
+    cursor: not-allowed
 }
 
 /* Spinner */
@@ -172,7 +167,7 @@
     width: 18px;
     height: 18px;
     flex-shrink: 0;
-    border: 2.5px solid rgba(255, 255, 255, .25);
+    border: 2px solid rgba(255, 255, 255, .35);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin .7s linear infinite;
@@ -185,10 +180,10 @@
     gap: 10px;
     margin-top: 14px;
     padding: 14px 16px;
-    background: rgba(239, 68, 68, .1);
-    border: 1px solid rgba(239, 68, 68, .3);
+    background: #fef2f2;
+    border: 1px solid #fecaca;
     border-radius: var(--r-sm);
-    color: #fca5a5;
+    color: #b91c1c;
     font-size: .87rem;
     line-height: 1.55;
     animation: fadeUp .3s ease both;
@@ -215,18 +210,14 @@
 
 .rf__results-title {
     font-family: var(--f-head);
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--white);
+    color: var(--ink);
 }
 
 .rf__results-uid {
-    background: var(--g-text);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradShift 4s ease infinite;
+    color: var(--red);
+    font-style: italic
 }
 
 .rf__reset {
@@ -235,16 +226,17 @@
     border-radius: 99px;
     background: var(--bg-card);
     color: var(--grey);
-    font-family: var(--f-head);
-    font-size: .82rem;
-    font-weight: 700;
+    font-family: var(--f-body);
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .04em;
     transition: .22s var(--ease);
 }
 
 .rf__reset:hover {
-    background: rgba(124, 58, 237, .1);
-    color: var(--white);
-    border-color: var(--violet);
+    background: var(--red-light);
+    color: var(--red);
+    border-color: rgba(155, 28, 28, .3);
 }
 
 /* Grid */
@@ -256,7 +248,7 @@
 
 @media(max-width:520px) {
     .rf__card {
-        padding: 22px 18px
+        padding: 24px 18px
     }
 
     .rf__grid {
@@ -264,19 +256,19 @@
     }
 }
 
-/* ── Select / dropdown override ─────────────────── */
+/* Select override */
 select.rf__input {
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
-    /* custom chevron arrow */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a89a8e' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 44px;
+    background-color: var(--bg-input);
 }
 
 select.rf__input option {
-    background: #1a1a2e;
-    color: #e2e8f0;
+    background: #ffffff;
+    color: #1a1410;
 }
