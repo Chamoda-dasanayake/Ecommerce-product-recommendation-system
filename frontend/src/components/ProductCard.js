@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import "./productcard.css";
 
-/*
- * Maps each product_type from model.py exactly to its local image file.
- * Images live in /public/images/ — served as /images/*.png by React.
- * For types without a generated image, falls back to emoji.
- */
 const TYPE_IMAGE = {
     "Headphones": "/images/headphones.png",
     "Smart Speaker": "/images/smart_speaker.png",

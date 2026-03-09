@@ -5,12 +5,12 @@ export default function HeroSection() {
     return (
         <section className="hero">
             <div className="hero__inner">
-                <span className="hero__badge">✨ AI-Powered</span>
+                <span className="hero__badge">🔥 Hot Deals Every Day</span>
                 <h1 className="hero__title">
-                    Discover Products <span className="hero__accent">Tailored For You</span>
+                    Shop Smarter, <span className="hero__accent">Save Bigger</span>
                 </h1>
                 <p className="hero__sub">
-                    Personalised recommendations powered by <strong>Collaborative Filtering</strong> and <strong>Content-Based Filtering</strong> — built on real Amazon Electronics data.
+                    Millions of products at unbeatable prices. Free shipping, easy returns, and deals handpicked just for you every single day.
                 </p>
                 <div className="hero__cta-row">
                     <a href="#recommend" className="hero__btn hero__btn--primary">Get My Picks →</a>

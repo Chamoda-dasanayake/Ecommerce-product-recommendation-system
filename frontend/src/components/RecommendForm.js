@@ -6,10 +6,8 @@ import "./recommendform.css";
 const API = "http://localhost:5000";
 
 export default function RecommendForm() {
-    // ── Tab state ────────────────────────────────────────────────────────────
-    const [activeTab, setActiveTab] = useState("cf");   // "cf" | "cbf"
+    const [activeTab, setActiveTab] = useState("cf");
 
-    // ── CF state ─────────────────────────────────────────────────────────────
     const [userId, setUserId] = useState("");
     const [userList, setUserList] = useState([]);
     const [cfRecs, setCfRecs] = useState([]);
@@ -18,15 +16,13 @@ export default function RecommendForm() {
     const [cfDone, setCfDone] = useState(false);
     const [usersLoading, setUsersLoading] = useState(true);
 
-    // ── CBF state ────────────────────────────────────────────────────────────
     const [asin, setAsin] = useState("");
-    const [asinName, setAsinName] = useState("");   // display name for the asin
+    const [asinName, setAsinName] = useState("");
     const [cbfRecs, setCbfRecs] = useState([]);
     const [cbfError, setCbfError] = useState("");
     const [cbfLoading, setCbfLoading] = useState(false);
     const [cbfDone, setCbfDone] = useState(false);
 
-    // ── Load users on mount ──────────────────────────────────────────────────
     useEffect(() => {
         axios.get(`${API}/users`)
             .then(res => {
@@ -37,7 +33,6 @@ export default function RecommendForm() {
             .finally(() => setUsersLoading(false));
     }, []);
 
-    // ── CF Submit ────────────────────────────────────────────────────────────
     const submitCF = async (e) => {
         e.preventDefault();
         setCfRecs([]); setCfError(""); setCfLoading(true); setCfDone(false);
@@ -52,7 +47,6 @@ export default function RecommendForm() {
         }
     };
 
-    // ── CBF Submit ────────────────────────────────────────────────────────────
     const submitCBF = useCallback(async (targetAsin) => {
         const queryAsin = targetAsin || asin;
         if (!queryAsin.trim()) { setCbfError("Please enter a product ASIN."); return; }
@@ -68,13 +62,11 @@ export default function RecommendForm() {
         }
     }, [asin]);
 
-    // ── "Find Similar" handler from ProductCard ──────────────────────────────
     const handleFindSimilar = useCallback((productAsin, productName) => {
         setAsin(productAsin);
         setAsinName(productName);
         setActiveTab("cbf");
         setCbfDone(false); setCbfRecs([]); setCbfError("");
-        // Auto-trigger search
         setTimeout(() => submitCBF(productAsin), 100);
     }, [submitCBF]);
 
@@ -92,7 +84,6 @@ export default function RecommendForm() {
                     <p className="rf__section-sub">Two recommendation engines, one seamless experience</p>
                 </div>
 
-                {/* ── Tabs ── */}
                 <div className="rf__tabs">
                     <button
                         className={`rf__tab ${activeTab === "cf" ? "rf__tab--active" : ""}`}
@@ -116,7 +107,6 @@ export default function RecommendForm() {
                     </button>
                 </div>
 
-                {/* ════════════════ CF PANEL ════════════════ */}
                 {activeTab === "cf" && (
                     <div className="rf__panel">
                         <div className="rf__panel-header">
