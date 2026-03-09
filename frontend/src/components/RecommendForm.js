@@ -80,7 +80,7 @@ export default function RecommendForm() {
                 <div className="rf__section-hdr">
                     <div className="rf__section-dot" />
                     <h2 className="rf__section-title">Smart Recommendations</h2>
-                    <p className="rf__section-sub">Personalised picks powered by our recommendation engine</p>
+                    <p className="rf__section-sub">Because the right product finds you — not the other way around.</p>
                 </div>
 
                 <div className="rf__tabs">

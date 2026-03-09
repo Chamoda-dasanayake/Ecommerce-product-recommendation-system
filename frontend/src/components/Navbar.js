@@ -34,7 +34,7 @@ export default function Navbar({ onSearch }) {
                     <input
                         type="text"
                         className="navbar__search-input"
-                        placeholder="Search products… e.g. wireless gaming headphones"
+                        placeholder="Search products…"
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                     />
