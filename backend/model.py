@@ -107,15 +107,16 @@ def enrich_product(asin: str, rank: int) -> dict:
     match_score = min(99, base_score + jitter)
 
     return {
-        "asin":       asin,
-        "rank":       rank,
-        "name":       f"{brand} {adj} {name_part}",
-        "brand":      brand,
-        "category":   category,
-        "emoji":      emoji,
-        "price":      price,
-        "rating":     rating,
-        "match_score": match_score,
+        "asin":         asin,
+        "rank":         rank,
+        "name":         f"{brand} {adj} {name_part}",
+        "product_type": name_part,          # exact product type, e.g. "Cable Set"
+        "brand":        brand,
+        "category":     category,
+        "emoji":        emoji,
+        "price":        price,
+        "rating":       rating,
+        "match_score":  match_score,
     }
 
 

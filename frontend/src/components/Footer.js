@@ -1,80 +1,54 @@
 import React from "react";
 import "./footer.css";
 
-const LINKS = {
-    "Shop": ["Electronics", "Phones & Tablets", "Computers", "Audio & Music", "Gaming", "Cameras", "Wearables"],
-    "Customer Service": ["Help Center", "Track Your Order", "Returns & Refunds", "Buyer Protection", "Report a Problem"],
-    "About ShopAI": ["About Us", "Press", "Careers", "Investor Relations", "ShopAI Blog", "Affiliates"],
-    "Connect": ["Facebook", "Twitter / X", "Instagram", "YouTube", "LinkedIn"],
-};
-
 export default function Footer() {
     return (
         <footer className="footer">
+            <div className="footer__inner">
 
-            {/* ── Promo strip ── */}
-            <div className="footer__strip">
-                <div className="footer__strip-inner">
-                    <span className="footer__strip-item">🚚 Free Shipping on $25+</span>
-                    <span className="footer__strip-divider">|</span>
-                    <span className="footer__strip-item">🔄 30-Day Easy Returns</span>
-                    <span className="footer__strip-divider">|</span>
-                    <span className="footer__strip-item">🛡️ Buyer Protection Guarantee</span>
-                    <span className="footer__strip-divider">|</span>
-                    <span className="footer__strip-item">💳 100% Secure Payment</span>
-                </div>
-            </div>
-
-            {/* ── Main footer ── */}
-            <div className="footer__main">
-                <div className="footer__brand-col">
+                {/* Brand */}
+                <div className="footer__brand">
                     <a href="/" className="footer__logo">
-                        <span className="footer__logo-icon">🛒</span>
+                        <span>🛒</span>
                         <span className="footer__logo-reco">Shop</span><span className="footer__logo-ai">AI</span>
                     </a>
-                    <p className="footer__brand-desc">
-                        AI-powered product recommendations using collaborative filtering and content-based filtering on real Amazon Electronics data.
+                    <p className="footer__desc">
+                        AI recommendation engine built on real Amazon Electronics data using Collaborative Filtering &amp; Content-Based Filtering.
                     </p>
-                    <div className="footer__tech-tags">
-                        <span className="footer__tag">Flask API</span>
-                        <span className="footer__tag">React</span>
-                        <span className="footer__tag">NumPy</span>
-                        <span className="footer__tag">scikit-learn</span>
-                    </div>
-                    <div className="footer__social">
-                        {["GitHub", "LinkedIn", "Twitter"].map(s => (
-                            <a key={s} href="#recommend" className="footer__social-btn">{s[0]}</a>
+                    <div className="footer__tags">
+                        {["Flask", "React", "NumPy", "scikit-learn", "Pandas"].map(t => (
+                            <span key={t} className="footer__tag">{t}</span>
                         ))}
                     </div>
                 </div>
 
-                {Object.entries(LINKS).map(([heading, links]) => (
-                    <div key={heading} className="footer__col">
-                        <h4 className="footer__col-heading">{heading}</h4>
-                        <ul className="footer__col-list">
-                            {links.map(link => (
-                                <li key={link}><a href="#recommend" className="footer__col-link">{link}</a></li>
-                            ))}
-                        </ul>
+                {/* Links */}
+                <div className="footer__links-grid">
+                    <div className="footer__col">
+                        <h4 className="footer__col-title">Shop</h4>
+                        {["Electronics", "Phones", "Computers", "Audio", "Gaming"].map(l => (
+                            <a key={l} href="#recommend" className="footer__link">{l}</a>
+                        ))}
                     </div>
-                ))}
-            </div>
-
-            {/* ── Bottom bar ── */}
-            <div className="footer__bottom">
-                <div className="footer__bottom-inner">
-                    <p className="footer__copy">
-                        © 2024 ShopAI. Academic project — E-Commerce Recommendation System.
-                        Built with <span className="footer__heart">♥</span> using Collaborative &amp; Content-Based Filtering.
-                    </p>
-                    <div className="footer__bottom-links">
-                        <a href="#recommend" className="footer__bottom-link">Privacy Policy</a>
-                        <a href="#recommend" className="footer__bottom-link">Terms of Service</a>
-                        <a href="#recommend" className="footer__bottom-link">Cookie Policy</a>
+                    <div className="footer__col">
+                        <h4 className="footer__col-title">Help</h4>
+                        {["Contact Us", "Returns", "Shipping", "FAQ", "Buyer Protection"].map(l => (
+                            <a key={l} href="#recommend" className="footer__link">{l}</a>
+                        ))}
                     </div>
                 </div>
+
             </div>
 
+            {/* Bottom */}
+            <div className="footer__bottom">
+                <p>© 2024 ShopAI — Academic Project · Built with ♥</p>
+                <div className="footer__bottom-links">
+                    <a href="#recommend">Privacy</a>
+                    <a href="#recommend">Terms</a>
+                    <a href="#recommend">GitHub</a>
+                </div>
+            </div>
         </footer>
     );
 }
