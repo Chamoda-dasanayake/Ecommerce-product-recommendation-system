@@ -45,6 +45,14 @@ _mock_model.recommend_products.side_effect = lambda uid, **kw: (
 )
 sys.modules["model"] = _mock_model
 
+# Create a mock cbf_model module
+_mock_cbf = MagicMock()
+_mock_cbf.is_cbf_loaded.return_value = True
+_mock_cbf.recommend_similar.side_effect = lambda asin, **kw: (
+    _MOCK_RECS if asin == "B00004NKIQ" else []
+)
+sys.modules["cbf_model"] = _mock_cbf
+
 import app as flask_app   # import after mock is injected
 
 
@@ -128,3 +136,57 @@ def test_recommend_valid_user(client):
     first = data["recommendations"][0]
     for field in ("asin", "rank", "name", "brand", "category", "emoji", "price", "rating", "match_score"):
         assert field in first, f"Missing field: {field}"
+
+
+# ── CBF Tests ──────────────────────────────────────────────────────────────
+
+def test_cbf_missing_body(client):
+    """POST /recommend/content with no body should return 400 missing_body."""
+    resp = client.post("/recommend/content", content_type="application/json", data="")
+    assert resp.status_code == 400
+    data = resp.get_json()
+    assert data["code"] == "missing_body"
+
+
+def test_cbf_missing_asin(client):
+    """POST /recommend/content with body but no asin key should return 400."""
+    resp = client.post(
+        "/recommend/content",
+        data=json.dumps({}),
+        content_type="application/json",
+    )
+    assert resp.status_code == 400
+    data = resp.get_json()
+    assert data["code"] == "missing_asin"
+
+
+def test_cbf_asin_not_found(client):
+    """POST /recommend/content with unknown asin should return 404 asin_not_found."""
+    resp = client.post(
+        "/recommend/content",
+        data=json.dumps({"asin": "UNKNOWN_ASIN_XYZ"}),
+        content_type="application/json",
+    )
+    assert resp.status_code == 404
+    data = resp.get_json()
+    assert data["code"] == "asin_not_found"
+
+
+def test_cbf_valid_asin(client):
+    """POST /recommend/content with a known asin should return enriched product objects."""
+    resp = client.post(
+        "/recommend/content",
+        data=json.dumps({"asin": "B00004NKIQ"}),
+        content_type="application/json",
+    )
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert "recommendations" in data
+    assert isinstance(data["recommendations"], list)
+    assert len(data["recommendations"]) > 0
+    assert data["asin"] == "B00004NKIQ"
+
+    # Verify enriched fields are present
+    first = data["recommendations"][0]
+    for field in ("asin", "rank", "name", "brand", "category", "emoji", "price", "rating", "match_score"):
+        assert field in first, f"CBF missing field: {field}"

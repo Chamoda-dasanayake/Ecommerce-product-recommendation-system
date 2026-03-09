@@ -1,80 +1,56 @@
 /* ══ APP WRAPPER ══════════════════════════════ */
 .app {
-  position: relative;
   min-height: 100vh;
   background: var(--bg);
-  overflow: hidden;
-  padding-top: 70px;
+  padding-top: var(--navbar-h);
 }
 
-/* ══ MAIN CONTENT ═════════════════════════════ */
+/* ══ MAIN ═════════════════════════════════════ */
 .main {
-  position: relative;
-  z-index: 1
+  min-height: calc(100vh - var(--navbar-h));
 }
 
-/* ══ DIVIDER ══════════════════════════════════ */
-.divider {
-  height: 1px;
-  max-width: 860px;
-  margin: 0 auto 60px;
-  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
-}
-
-/* ══ FORM SECTION ═════════════════════════════ */
-.form-section {
-  max-width: 860px;
+/* ══ SECTION CONTAINER ════════════════════════ */
+.section-container {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 120px;
+  padding: 0 20px;
 }
 
-.section-eyebrow {
+/* ══ SECTION HEADERS ══════════════════════════ */
+.section-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 48px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--orange);
 }
 
-.eyebrow-bar {
-  flex: 1;
-  max-width: 100px;
-  height: 1px;
-}
-
-.eyebrow-bar:first-child {
-  background: linear-gradient(90deg, transparent, var(--red))
-}
-
-.eyebrow-bar:last-child {
-  background: linear-gradient(90deg, var(--muted), transparent)
-}
-
-.eyebrow-text {
-  font-family: var(--f-head);
-  font-size: .75rem;
-  font-weight: 600;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* ══ FOOTER ═══════════════════════════════════ */
-.footer {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 32px 24px;
-  text-align: center;
-}
-
-.footer p {
-  font-size: .82rem;
-  color: var(--muted)
-}
-
-.footer-brand {
-  font-family: var(--f-head);
+.section-title {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--red);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: inline-block;
+}
+
+.section-see-all {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--orange);
+  cursor: pointer;
+}
+
+.section-see-all:hover {
+  text-decoration: underline;
 }

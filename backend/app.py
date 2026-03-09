@@ -27,9 +27,15 @@ cache = Cache(app)
 
 # ── Lazy-import model (avoids heavy load at import time of tests) ──────────
 def _get_model():
-    """Import model functions on first use."""
+    """Import CF model functions on first use."""
     import model as _m
     return _m
+
+
+def _get_cbf():
+    """Import CBF model functions on first use."""
+    import cbf_model as _c
+    return _c
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -40,10 +46,16 @@ def _get_model():
 def health():
     """
     Liveness probe.
-    Returns 200 with model_loaded=True once the model is ready.
+    Returns 200 with model_loaded=True once the CF model is ready,
+    and cbf_loaded=True once the CBF model is ready.
     """
-    m = _get_model()
-    return jsonify({"status": "ok", "model_loaded": m.is_model_loaded()}), 200
+    m   = _get_model()
+    cbf = _get_cbf()
+    return jsonify({
+        "status":     "ok",
+        "model_loaded": m.is_model_loaded(),
+        "cbf_loaded":   cbf.is_cbf_loaded(),
+    }), 200
 
 
 @app.route("/users", methods=["GET"])
@@ -128,6 +140,78 @@ def recommend():
     elapsed = time.perf_counter() - t_start
     logger.info("Recommendations served for user=%s  count=%d  time=%.2fs",
                 user_id, len(recs), elapsed)
+
+    return jsonify(response_data), 200
+
+
+@app.route("/recommend/content", methods=["POST"])
+def recommend_content():
+    """
+    Content-Based Filtering endpoint.
+    Body:   { "asin": "<string>" }
+    Returns: { "recommendations": [...], "asin": "...", "count": N }
+    """
+    t_start = time.perf_counter()
+
+    # ── 1. Parse body ────────────────────────────────────────────────────────
+    data = request.get_json(silent=True)
+    if data is None:
+        logger.warning("CBF request body is missing or not valid JSON.")
+        return jsonify({
+            "error": "Request body must be JSON.",
+            "code":  "missing_body",
+        }), 400
+
+    asin = data.get("asin")
+
+    # ── 2. Validate ──────────────────────────────────────────────────────────
+    if asin is None:
+        return jsonify({
+            "error": "asin is required.",
+            "code":  "missing_asin",
+        }), 400
+
+    if not isinstance(asin, str) or not asin.strip():
+        return jsonify({
+            "error": "asin must be a non-empty string.",
+            "code":  "invalid_asin",
+        }), 400
+
+    asin = asin.strip()
+
+    # ── 3. Check cache ───────────────────────────────────────────────────────
+    cache_key = f"cbf:{asin}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        logger.info("Cache HIT (CBF) for asin %s", asin)
+        return jsonify(cached), 200
+
+    # ── 4. Get similar products ──────────────────────────────────────────────
+    cbf  = _get_cbf()
+    recs = cbf.recommend_similar(asin)
+
+    if not recs:
+        elapsed = time.perf_counter() - t_start
+        logger.warning("CBF: No results for asin=%s (%.2fs)", asin, elapsed)
+        return jsonify({
+            "error": (
+                f"ASIN '{asin}' was not found in the product catalogue. "
+                "Use GET /users then POST /recommend to discover valid ASINs."
+            ),
+            "code": "asin_not_found",
+        }), 404
+
+    # ── 5. Cache & return ────────────────────────────────────────────────────
+    response_data = {
+        "recommendations": recs,
+        "asin":  asin,
+        "count": len(recs),
+    }
+    cache.set(cache_key, response_data)
+
+    elapsed = time.perf_counter() - t_start
+    logger.info("CBF recommendations served for asin=%s  count=%d  time=%.2fs",
+                asin, len(recs), elapsed)
 
     return jsonify(response_data), 200
 
