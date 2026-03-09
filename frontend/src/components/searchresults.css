@@ -1,0 +1,132 @@
+.sr {
+    background: var(--bg);
+    padding: 48px 0 80px;
+    min-height: 60vh;
+}
+
+.sr__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.sr__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+}
+
+.sr__header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.sr__icon {
+    font-size: 2rem;
+}
+
+.sr__title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.sr__query {
+    color: var(--orange);
+}
+
+.sr__count {
+    font-size: .82rem;
+    color: var(--grey);
+    margin-top: 3px;
+}
+
+.sr__clear {
+    padding: 8px 18px;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--grey);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+}
+
+.sr__clear:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: var(--orange-light);
+}
+
+.sr__loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 0;
+    font-size: .95rem;
+    color: var(--grey);
+}
+
+.sr__spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 96, 0, .2);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin .7s linear infinite;
+}
+
+.sr__error {
+    padding: 14px 18px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--r-sm);
+    color: #b91c1c;
+    font-size: .85rem;
+    margin-top: 16px;
+}
+
+.sr__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.sr__empty {
+    text-align: center;
+    padding: 64px 20px;
+    color: var(--grey);
+}
+
+.sr__empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.sr__empty p {
+    font-size: .95rem;
+    margin-bottom: 8px;
+    color: var(--ink-2);
+}
+
+.sr__empty-hint {
+    font-size: .82rem;
+    color: var(--muted) !important;
+}
+
+@media (max-width: 600px) {
+    .sr__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
