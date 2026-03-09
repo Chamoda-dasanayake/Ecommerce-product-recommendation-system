@@ -30,6 +30,11 @@ def _get_cbf():
     return _c
 
 
+def _get_hybrid():
+    import hybrid_model as _h
+    return _h
+
+
 @app.route("/health", methods=["GET"])
 def health():
     m   = _get_model()
@@ -39,6 +44,55 @@ def health():
         "model_loaded": m.is_model_loaded(),
         "cbf_loaded":   cbf.is_cbf_loaded(),
     }), 200
+
+
+@app.route("/recommend/hybrid", methods=["POST"])
+def recommend_hybrid():
+    t_start = time.perf_counter()
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be JSON.", "code": "missing_body"}), 400
+
+    user_id = data.get("user_id")
+    if user_id is None:
+        return jsonify({"error": "user_id is required.", "code": "missing_user_id"}), 400
+
+    if isinstance(user_id, int):
+        user_id = str(user_id)
+
+    if not isinstance(user_id, str) or not user_id.strip():
+        return jsonify({"error": "user_id must be a non-empty string.", "code": "invalid_user_id"}), 400
+
+    user_id = user_id.strip()
+
+    cache_key = f"hybrid:{user_id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        logger.info("Cache HIT (hybrid) for user %s", user_id)
+        return jsonify(cached), 200
+
+    h    = _get_hybrid()
+    recs = h.hybrid_recommend(user_id)
+
+    if not recs:
+        elapsed = time.perf_counter() - t_start
+        logger.warning("Hybrid: No results for user=%s (%.2fs)", user_id, elapsed)
+        return jsonify({
+            "error": f"User '{user_id}' was not found. Use GET /users for valid IDs.",
+            "code":  "user_not_found",
+        }), 404
+
+    response_data = {
+        "recommendations": recs,
+        "user_id": user_id,
+        "count":   len(recs),
+    }
+    cache.set(cache_key, response_data)
+
+    elapsed = time.perf_counter() - t_start
+    logger.info("Hybrid recommendations for user=%s  count=%d  time=%.2fs", user_id, len(recs), elapsed)
+    return jsonify(response_data), 200
 
 
 @app.route("/users", methods=["GET"])

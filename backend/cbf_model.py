@@ -50,6 +50,27 @@ def recommend_similar(asin: str, n: int = TOP_N) -> list[dict]:
     return results
 
 
+def get_cbf_scores(asin: str) -> dict:
+    """
+    Return a {asin: cosine_similarity} dict for every item in the catalogue
+    relative to the given ASIN.  Excludes the query item itself.
+    Returns an empty dict if asin is not found.
+    """
+    _ensure_cbf_model()
+
+    if asin not in _asin_to_idx:
+        return {}
+
+    idx    = _asin_to_idx[asin]
+    scores = _cosine_sim[idx]
+
+    return {
+        _item_ids[i]: float(scores[i])
+        for i in range(len(_item_ids))
+        if i != idx and scores[i] > 0
+    }
+
+
 def build_cbf_model():
     _build_and_cache()
 

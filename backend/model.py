@@ -129,6 +129,33 @@ def recommend_products(user_id: str, n: int = TOP_N) -> list[dict]:
     return [enrich_product(asin, rank + 1) for rank, asin in enumerate(raw_asins)]
 
 
+def get_cf_scores(user_id: str) -> dict:
+    """
+    Return a min-max normalised {asin: score} dict for all items the user
+    has NOT yet rated.  Used by the hybrid model to fuse with CBF scores.
+    Returns an empty dict if user_id is not in the training set.
+    """
+    _ensure_model()
+
+    if user_id not in _user_item_matrix.index:
+        return {}
+
+    u_idx      = _user_ids.index(user_id)
+    sim_row    = _similarity[u_idx]
+    user_rated = _user_item_matrix.loc[user_id]
+
+    unrated_mask  = (user_rated == 0).values
+    scores        = np.dot(sim_row, _user_item_matrix.values)
+    scores[~unrated_mask] = 0.0
+
+    s_min, s_max = scores.min(), scores.max()
+    if s_max - s_min < 1e-9:
+        return {}
+
+    normed = (scores - s_min) / (s_max - s_min)
+    return {_item_ids[i]: float(normed[i]) for i in range(len(_item_ids)) if normed[i] > 0}
+
+
 def _ensure_model():
     global _user_item_matrix, _similarity, _user_ids, _item_ids
 
