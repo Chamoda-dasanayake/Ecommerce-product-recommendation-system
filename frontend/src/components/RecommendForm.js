@@ -6,18 +6,16 @@ import "./recommendform.css";
 const API = "http://localhost:5000";
 
 export default function RecommendForm() {
-    const [activeTab, setActiveTab] = useState("hybrid");
+    const [activeTab, setActiveTab] = useState("foryou");
 
-    // CF state
     const [userId, setUserId] = useState("");
     const [userList, setUserList] = useState([]);
-    const [cfRecs, setCfRecs] = useState([]);
-    const [cfError, setCfError] = useState("");
-    const [cfLoading, setCfLoading] = useState(false);
-    const [cfDone, setCfDone] = useState(false);
+    const [forYouRecs, setForYouRecs] = useState([]);
+    const [forYouError, setForYouError] = useState("");
+    const [forYouLoading, setForYouLoading] = useState(false);
+    const [forYouDone, setForYouDone] = useState(false);
     const [usersLoading, setUsersLoading] = useState(true);
 
-    // CBF state
     const [asin, setAsin] = useState("");
     const [asinName, setAsinName] = useState("");
     const [cbfRecs, setCbfRecs] = useState([]);
@@ -25,37 +23,27 @@ export default function RecommendForm() {
     const [cbfLoading, setCbfLoading] = useState(false);
     const [cbfDone, setCbfDone] = useState(false);
 
-    // Hybrid state
-    const [hybridUserId, setHybridUserId] = useState("");
-    const [hybridRecs, setHybridRecs] = useState([]);
-    const [hybridError, setHybridError] = useState("");
-    const [hybridLoading, setHybridLoading] = useState(false);
-    const [hybridDone, setHybridDone] = useState(false);
-
     useEffect(() => {
         axios.get(`${API}/users`)
             .then(res => {
                 setUserList(res.data.users || []);
-                if (res.data.users?.length > 0) {
-                    setUserId(res.data.users[0]);
-                    setHybridUserId(res.data.users[0]);
-                }
+                if (res.data.users?.length > 0) setUserId(res.data.users[0]);
             })
-            .catch(() => setCfError("Cannot connect to backend. Make sure the server is running on port 5000."))
+            .catch(() => setForYouError("Cannot connect to backend. Make sure the server is running on port 5000."))
             .finally(() => setUsersLoading(false));
     }, []);
 
-    const submitCF = async (e) => {
+    const submitForYou = async (e) => {
         e.preventDefault();
-        setCfRecs([]); setCfError(""); setCfLoading(true); setCfDone(false);
+        setForYouRecs([]); setForYouError(""); setForYouLoading(true); setForYouDone(false);
         try {
-            const res = await axios.post(`${API}/recommend`, { user_id: userId });
-            setCfRecs(res.data.recommendations);
-            setCfDone(true);
+            const res = await axios.post(`${API}/recommend/hybrid`, { user_id: userId });
+            setForYouRecs(res.data.recommendations);
+            setForYouDone(true);
         } catch (err) {
-            setCfError(err.response?.data?.error || "Cannot connect to server.");
+            setForYouError(err.response?.data?.error || "Cannot connect to server.");
         } finally {
-            setCfLoading(false);
+            setForYouLoading(false);
         }
     };
 
@@ -74,31 +62,16 @@ export default function RecommendForm() {
         }
     }, [asin]);
 
-    const submitHybrid = async (e) => {
-        e.preventDefault();
-        setHybridRecs([]); setHybridError(""); setHybridLoading(true); setHybridDone(false);
-        try {
-            const res = await axios.post(`${API}/recommend/hybrid`, { user_id: hybridUserId });
-            setHybridRecs(res.data.recommendations);
-            setHybridDone(true);
-        } catch (err) {
-            setHybridError(err.response?.data?.error || "Cannot connect to server.");
-        } finally {
-            setHybridLoading(false);
-        }
-    };
-
     const handleFindSimilar = useCallback((productAsin, productName) => {
         setAsin(productAsin);
         setAsinName(productName);
-        setActiveTab("cbf");
+        setActiveTab("similar");
         setCbfDone(false); setCbfRecs([]); setCbfError("");
         setTimeout(() => submitCBF(productAsin), 100);
     }, [submitCBF]);
 
-    const resetCF = () => { setUserId(userList[0] || ""); setCfRecs([]); setCfError(""); setCfDone(false); };
+    const resetForYou = () => { setUserId(userList[0] || ""); setForYouRecs([]); setForYouError(""); setForYouDone(false); };
     const resetCBF = () => { setAsin(""); setAsinName(""); setCbfRecs([]); setCbfError(""); setCbfDone(false); };
-    const resetHybrid = () => { setHybridUserId(userList[0] || ""); setHybridRecs([]); setHybridError(""); setHybridDone(false); };
 
     return (
         <section className="rf" id="recommend">
@@ -107,130 +80,45 @@ export default function RecommendForm() {
                 <div className="rf__section-hdr">
                     <div className="rf__section-dot" />
                     <h2 className="rf__section-title">Smart Recommendations</h2>
-                    <p className="rf__section-sub">Three recommendation engines — collaborative, content-based, and hybrid</p>
+                    <p className="rf__section-sub">Personalised picks powered by our recommendation engine</p>
                 </div>
 
-                {/* ── Tabs ── */}
                 <div className="rf__tabs">
                     <button
-                        className={`rf__tab ${activeTab === "hybrid" ? "rf__tab--active rf__tab--hybrid" : ""}`}
-                        onClick={() => setActiveTab("hybrid")}
-                    >
-                        <span className="rf__tab-icon">⚡</span>
-                        <span>
-                            <span className="rf__tab-title">Best Picks</span>
-                            <span className="rf__tab-desc">Hybrid · CF + CBF</span>
-                        </span>
-                    </button>
-                    <button
-                        className={`rf__tab ${activeTab === "cf" ? "rf__tab--active" : ""}`}
-                        onClick={() => setActiveTab("cf")}
+                        className={`rf__tab ${activeTab === "foryou" ? "rf__tab--active" : ""}`}
+                        onClick={() => setActiveTab("foryou")}
                     >
                         <span className="rf__tab-icon">🧑</span>
                         <span>
                             <span className="rf__tab-title">For You</span>
-                            <span className="rf__tab-desc">Collaborative Filtering</span>
+                            <span className="rf__tab-desc">Personalised Picks</span>
                         </span>
                     </button>
                     <button
-                        className={`rf__tab ${activeTab === "cbf" ? "rf__tab--active" : ""}`}
-                        onClick={() => setActiveTab("cbf")}
+                        className={`rf__tab ${activeTab === "similar" ? "rf__tab--active" : ""}`}
+                        onClick={() => setActiveTab("similar")}
                     >
                         <span className="rf__tab-icon">🔍</span>
                         <span>
                             <span className="rf__tab-title">Similar Items</span>
-                            <span className="rf__tab-desc">Content-Based Filtering</span>
+                            <span className="rf__tab-desc">Find Related Products</span>
                         </span>
                     </button>
                 </div>
 
-                {/* ══ HYBRID PANEL ══ */}
-                {activeTab === "hybrid" && (
-                    <div className="rf__panel">
-                        <div className="rf__panel-header">
-                            <div>
-                                <h3 className="rf__panel-title">Best Picks For You</h3>
-                                <p className="rf__panel-desc">
-                                    Combines <strong>user behaviour</strong> and <strong>product similarity</strong> into one ranked list — 60% collaborative signals + 40% content signals.
-                                </p>
-                            </div>
-                            <div className="rf__algo-badge rf__algo-badge--hybrid">Hybrid · 60/40</div>
-                        </div>
-
-                        <form className="rf__form" onSubmit={submitHybrid}>
-                            <div className="rf__field">
-                                <label className="rf__label" htmlFor="hybrid-uid">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                                    Customer User ID
-                                </label>
-                                {usersLoading ? (
-                                    <div className="rf__loading-input"><span className="rf__spinner" /> Loading users…</div>
-                                ) : (
-                                    <select
-                                        id="hybrid-uid"
-                                        className="rf__select"
-                                        value={hybridUserId}
-                                        onChange={e => setHybridUserId(e.target.value)}
-                                        disabled={hybridLoading}
-                                        required
-                                    >
-                                        {userList.map(uid => <option key={uid} value={uid}>{uid}</option>)}
-                                    </select>
-                                )}
-                                <p className="rf__hint">⚡ Fuses CF + CBF scores: <strong>Final = 0.6 × CF + 0.4 × CBF</strong></p>
-                            </div>
-                            <button className={`rf__submit-btn rf__submit-btn--hybrid ${hybridLoading ? "rf__submit-btn--loading" : ""}`} type="submit" disabled={hybridLoading || usersLoading}>
-                                {hybridLoading
-                                    ? <><span className="rf__spinner rf__spinner--white" /> Fusing recommendations…</>
-                                    : <>⚡ Get Best Picks</>
-                                }
-                            </button>
-                        </form>
-
-                        {hybridError && <div className="rf__error">⚠️ {hybridError}</div>}
-
-                        {hybridDone && hybridRecs.length > 0 && (
-                            <div className="rf__results">
-                                <div className="rf__results-header">
-                                    <div>
-                                        <h3 className="rf__results-title">
-                                            Top {hybridRecs.length} hybrid picks for
-                                            <span className="rf__results-uid"> {hybridUserId}</span>
-                                        </h3>
-                                        <p className="rf__results-hint">Ranked by combined CF + CBF score (60/40 weighting)</p>
-                                    </div>
-                                    <button className="rf__reset-btn" onClick={resetHybrid}>New Search</button>
-                                </div>
-                                <div className="rf__grid">
-                                    {hybridRecs.map((product, i) => (
-                                        <ProductCard
-                                            key={product.asin}
-                                            product={product}
-                                            mode="hybrid"
-                                            style={{ animationDelay: `${i * 0.05}s` }}
-                                            onFindSimilar={handleFindSimilar}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* ══ CF PANEL ══ */}
-                {activeTab === "cf" && (
+                {activeTab === "foryou" && (
                     <div className="rf__panel">
                         <div className="rf__panel-header">
                             <div>
                                 <h3 className="rf__panel-title">Personalised For You</h3>
                                 <p className="rf__panel-desc">
-                                    Select a User ID to get personalised product recommendations based on users with similar purchase history.
+                                    Select your User ID to get a curated list of products matched to your taste and purchase history.
                                 </p>
                             </div>
-                            <div className="rf__algo-badge rf__algo-badge--cf">Collaborative Filtering</div>
+                            <div className="rf__algo-badge rf__algo-badge--cf">Personalised</div>
                         </div>
 
-                        <form className="rf__form" onSubmit={submitCF}>
+                        <form className="rf__form" onSubmit={submitForYou}>
                             <div className="rf__field">
                                 <label className="rf__label" htmlFor="uid">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
@@ -239,34 +127,34 @@ export default function RecommendForm() {
                                 {usersLoading ? (
                                     <div className="rf__loading-input"><span className="rf__spinner" /> Loading users…</div>
                                 ) : (
-                                    <select id="uid" className="rf__select" value={userId} onChange={e => setUserId(e.target.value)} disabled={cfLoading} required>
+                                    <select id="uid" className="rf__select" value={userId} onChange={e => setUserId(e.target.value)} disabled={forYouLoading} required>
                                         {userList.map(uid => <option key={uid} value={uid}>{uid}</option>)}
                                     </select>
                                 )}
                                 <p className="rf__hint">💡 Real User IDs from the Amazon Electronics ratings dataset.</p>
                             </div>
-                            <button className={`rf__submit-btn ${cfLoading ? "rf__submit-btn--loading" : ""}`} type="submit" disabled={cfLoading || usersLoading}>
-                                {cfLoading
-                                    ? <><span className="rf__spinner rf__spinner--white" /> Analysing purchase history…</>
+                            <button className={`rf__submit-btn ${forYouLoading ? "rf__submit-btn--loading" : ""}`} type="submit" disabled={forYouLoading || usersLoading}>
+                                {forYouLoading
+                                    ? <><span className="rf__spinner rf__spinner--white" /> Finding your picks…</>
                                     : <>Get My Recommendations</>
                                 }
                             </button>
                         </form>
 
-                        {cfError && <div className="rf__error">⚠️ {cfError}</div>}
+                        {forYouError && <div className="rf__error">⚠️ {forYouError}</div>}
 
-                        {cfDone && cfRecs.length > 0 && (
+                        {forYouDone && forYouRecs.length > 0 && (
                             <div className="rf__results">
                                 <div className="rf__results-header">
                                     <div>
-                                        <h3 className="rf__results-title">Top {cfRecs.length} picks for<span className="rf__results-uid"> {userId}</span></h3>
-                                        <p className="rf__results-hint">Click "🔍 Similar" on any card to switch to content-based matches</p>
+                                        <h3 className="rf__results-title">Top {forYouRecs.length} picks for<span className="rf__results-uid"> {userId}</span></h3>
+                                        <p className="rf__results-hint">Click "🔍 Similar" on any card to find related products</p>
                                     </div>
-                                    <button className="rf__reset-btn" onClick={resetCF}>New Search</button>
+                                    <button className="rf__reset-btn" onClick={resetForYou}>New Search</button>
                                 </div>
                                 <div className="rf__grid">
-                                    {cfRecs.map((product, i) => (
-                                        <ProductCard key={product.asin} product={product} mode="cf" style={{ animationDelay: `${i * 0.05}s` }} onFindSimilar={handleFindSimilar} />
+                                    {forYouRecs.map((product, i) => (
+                                        <ProductCard key={product.asin} product={product} mode="hybrid" style={{ animationDelay: `${i * 0.05}s` }} onFindSimilar={handleFindSimilar} />
                                     ))}
                                 </div>
                             </div>
@@ -274,17 +162,16 @@ export default function RecommendForm() {
                     </div>
                 )}
 
-                {/* ══ CBF PANEL ══ */}
-                {activeTab === "cbf" && (
+                {activeTab === "similar" && (
                     <div className="rf__panel">
                         <div className="rf__panel-header">
                             <div>
                                 <h3 className="rf__panel-title">Find Similar Items</h3>
                                 <p className="rf__panel-desc">
-                                    Enter a product ASIN to find items with similar features — same category, brand tier, and price range.
+                                    Enter a product ASIN to discover items with similar features — same category, brand tier, and price range.
                                 </p>
                             </div>
-                            <div className="rf__algo-badge rf__algo-badge--cbf">Content-Based Filtering</div>
+                            <div className="rf__algo-badge rf__algo-badge--cbf">Similar Items</div>
                         </div>
 
                         {asinName && (
@@ -305,7 +192,7 @@ export default function RecommendForm() {
                                     id="asin-input"
                                     type="text"
                                     className="rf__input"
-                                    placeholder="e.g. B00004NKIQ — get this from the 'For You' results"
+                                    placeholder="e.g. B00004NKIQ — use 🔍 on any card to auto-fill"
                                     value={asin}
                                     onChange={e => { setAsin(e.target.value); setAsinName(""); }}
                                     disabled={cbfLoading}
@@ -330,7 +217,7 @@ export default function RecommendForm() {
                                             {cbfRecs.length} similar products found
                                             {asinName && <span className="rf__results-uid"> for {asinName}</span>}
                                         </h3>
-                                        <p className="rf__results-hint">Ranked by feature similarity — category, brand tier, and price range</p>
+                                        <p className="rf__results-hint">Ranked by feature similarity — category, brand, and price range</p>
                                     </div>
                                     <button className="rf__reset-btn" onClick={resetCBF}>New Search</button>
                                 </div>
