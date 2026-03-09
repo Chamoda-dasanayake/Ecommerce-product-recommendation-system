@@ -150,6 +150,17 @@
     color: var(--orange);
 }
 
+.rf__algo-badge--hybrid {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+.rf__tab--hybrid.rf__tab--active {
+    color: #7c3aed;
+    border-bottom-color: #7c3aed;
+    background: #f5f3ff;
+}
+
 /* Form */
 .rf__form {
     display: flex;
@@ -262,6 +273,16 @@
 
 .rf__submit-btn--cbf:hover {
     background: #1260e5;
+}
+
+.rf__submit-btn--hybrid {
+    background: #7c3aed;
+    box-shadow: 0 3px 12px rgba(124, 58, 237, .28);
+}
+
+.rf__submit-btn--hybrid:hover {
+    background: #6d28d9;
+    box-shadow: 0 5px 16px rgba(124, 58, 237, .36);
 }
 
 .rf__submit-btn--loading {
