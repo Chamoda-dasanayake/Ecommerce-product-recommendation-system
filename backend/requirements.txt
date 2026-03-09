@@ -1,0 +1,9 @@
+flask
+flask-cors
+flask-caching
+pandas
+numpy
+scikit-learn
+sentence-transformers
+gunicorn
+pytest

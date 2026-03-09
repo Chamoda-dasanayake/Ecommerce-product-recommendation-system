@@ -7,7 +7,7 @@ import RecommendForm from "./components/RecommendForm";
 import SearchResults from "./components/SearchResults";
 import Footer from "./components/Footer";
 
-const API = "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
